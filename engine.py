@@ -1,12 +1,18 @@
 import pygame
 import pymunk
 import pymunk.pygame_util
-import math
+import playsound
 
 pygame.init()
 
 
-screen = pygame.display.set_mode((600,400))
+screen = pygame.display.set_mode((1200,800))
+x=0
+print("Collision Count:")
+pygame.mixer.init(buffer=256)
+pygame.mixer.music.load("clack_sound.mp3")
+pygame.mixer.music.set_volume(1)
+
 
 
 
@@ -17,63 +23,85 @@ def draw(space, screen, draw_options):
 
 def create_floor(space):
 	b0 = space.static_body
-	segment = pymunk.Segment(b0, (50, 350), (550, 350), 4)
+	segment = pymunk.Segment(b0, (100, 700), (1300, 700), 4)
 	segment.elasticity = 0
 	space.add(segment)
 
-def create_wall(space):
+def create_wall(space,collision_type):
 	b0 = space.static_body
-	segment = pymunk.Segment(b0, (50, 350), (50, 50), 4)
+	segment = pymunk.Segment(b0, (100, 700), (100, 100), 4)
 	segment.elasticity = 1
+	segment.collision_type = collision_type
 	space.add(segment)
 
 
-def create_obj1(space):
-	body = pymunk.Body(body_type=pymunk.Body.DYNAMIC,mass=10,moment=100)
-	body.position = 300,320
-	vs=[(-25,-25),(25,-25),(25,25),(-25,25)]
+def create_obj1(space, collision_type):
+	body = pymunk.Body(body_type=pymunk.Body.DYNAMIC,mass=1000,moment=100000)
+	body.position =400,640 #previous_pos = 300,320
+	vs=[(-50,-50),(50,-50),(50,50),(-50,50)]
 	shape = pymunk.Poly(body, vs)
 	shape.elasticity = 1
 	shape.friction = 0
 	shape.color = (150, 50, 0, 100)
+	shape.collision_type = collision_type 
 	
 
-	#rotation_limit_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
-	#rotation_limit_body.position = (300,320)
-	#rotation_limit_joint=pymunk.SlideJoint(body, rotation_limit_body, (-0,0), (0,0),0, 0)
+	#groove_joint_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
+	#groove_joint_body.position = (300,320)
+	#rotation_limit_joint=pymunk.SlideJoint(body, groove_joint_body, (-0,0), (0,0),0, 0)
 
-	body.apply_impulse_at_local_point((-1000,0),(0,0))
+	body.apply_impulse_at_local_point((-50*body.mass,0),(0,0))
 
 	space.add(body, shape,)
 	return shape,body.position
 
-def create_obj2(space):
-	body = pymunk.Body(body_type=pymunk.Body.DYNAMIC,mass=10,moment=100)
-	body.position = 200,327
-	vs=[(-25,-25),(25,-25),(25,25),(-25,25)]
+def create_obj2(space, collision_type):
+	body = pymunk.Body(body_type=pymunk.Body.DYNAMIC,mass=0.1,moment=1000000)
+	body.position = 200,640 #previous_pos = 200,320
+	vs=[(-50,-50),(50,-50),(50,50),(-50,50)]
 	shape = pymunk.Poly(body, vs)
 	shape.elasticity = 1
 	shape.friction = 0
 	shape.color = (150, 50, 0, 100)
+	shape.collision_type = collision_type
+	
+
 	space.add(body, shape)
 	return shape,body.position
+
+def create_bounds(space):
+	b0 = space.static_body
+	segment = pymunk.Segment(b0, (100, 594), (1300, 594), 4)
+	segment.elasticity = 0
+	space.add(segment)
+
+def n_collision(arbiter,space,handler): 	
+	global x
+	x=x+1
+	print(x)
+	pygame.mixer.music.play()
 
 def run(window):
 	run = True
 	clock = pygame.time.Clock()
-	fps = 60
+	fps = 100
+	dt=400
 
 	space = pymunk.Space()
-	space.gravity = (0, 100)
-	create_obj1(space)
-	create_obj2(space)
+	space.gravity = (0, 100000)
+	create_obj1(space,1)
+	create_obj2(space,2)
 	create_floor(space)
-	create_wall(space)
+	create_wall(space,3)
+	create_bounds(space)
 	draw_options = pymunk.pygame_util.DrawOptions(window)
+	
 
-	b0 = space.static_body
-	segment = pymunk.Segment(b0, (0, 0), (640, 0), 4)
-	segment.elasticity = 1
+	col_handl1 = space.add_collision_handler(1,2)
+	col_handl2 = space.add_collision_handler(2,3)
+	col_handl1.post_solve = n_collision
+	col_handl2.post_solve = n_collision
+	space.use_spatial_hash(50,50)
 
 	while run:
 		
@@ -83,9 +111,9 @@ def run(window):
 				break
 
 		draw(space, window, draw_options)
-		space.step(1/fps)
 		clock.tick(fps)
 		window.fill((30,30,30))
+		space.step(1/dt)
 		
 
 	pygame.quit()
