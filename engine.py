@@ -46,13 +46,13 @@ def create_obj1(space, collision_type):
 	shape.collision_type = collision_type 
 	
 
-	#groove_joint_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
-	#groove_joint_body.position = (300,320)
-	#rotation_limit_joint=pymunk.SlideJoint(body, groove_joint_body, (-0,0), (0,0),0, 0)
+	groove_joint_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
+	groove_joint_body.position = (400,640)
+	groove_joint=pymunk.GrooveJoint(body, groove_joint_body, (100,640), (1300,640),(0, 0))
 
 	body.apply_impulse_at_local_point((-50*body.mass,0),(0,0))
 
-	space.add(body, shape,)
+	space.add(body, shape,groove_joint)
 	return shape,body.position
 
 def create_obj2(space, collision_type):
@@ -72,6 +72,7 @@ def create_obj2(space, collision_type):
 def create_bounds(space):
 	b0 = space.static_body
 	segment = pymunk.Segment(b0, (100, 594), (1300, 594), 4)
+	segment.color=(30, 30, 30, 0)
 	segment.elasticity = 0
 	space.add(segment)
 
