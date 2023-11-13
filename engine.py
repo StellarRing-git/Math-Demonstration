@@ -11,7 +11,7 @@ x=0
 print("Collision Count:")
 pygame.mixer.init(buffer=256)
 pygame.mixer.music.load("clack_sound.mp3")
-pygame.mixer.music.set_volume(1)
+pygame.mixer.music.set_volume(1.5)
 
 
 
@@ -46,13 +46,13 @@ def create_obj1(space, collision_type):
 	shape.collision_type = collision_type 
 	
 
-	groove_joint_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
-	groove_joint_body.position = (400,640)
-	groove_joint=pymunk.GrooveJoint(body, groove_joint_body, (100,640), (1300,640),(0, 0))
+	#groove_joint_body = pymunk.Body(body_type = pymunk.Body.STATIC) # 1
+	#groove_joint_body.position = (400,640)
+	#groove_joint=pymunk.GrooveJoint(body, groove_joint_body, (100,640), (1300,640),(0, 0))
 
 	body.apply_impulse_at_local_point((-50*body.mass,0),(0,0))
 
-	space.add(body, shape,groove_joint)
+	space.add(body, shape,)
 	return shape,body.position
 
 def create_obj2(space, collision_type):
@@ -86,7 +86,7 @@ def run(window):
 	run = True
 	clock = pygame.time.Clock()
 	fps = 100
-	dt=400
+	dt=100
 
 	space = pymunk.Space()
 	space.gravity = (0, 100000)
