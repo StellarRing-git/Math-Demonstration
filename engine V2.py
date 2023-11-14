@@ -21,7 +21,7 @@ class Game():
         self.v1 = 0
         self.v2 = -100
         self.m1 = 1
-        self.m2 = 1000000
+        self.m2 = 10000
         self.y = 300
         self.pos1 = np.array([300,self.y])
         self.pos2 = np.array([400,self.y])
@@ -82,17 +82,22 @@ class Game():
                     break
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        self.timestep = 1/2000
+                        if self.timestep < 0:
+                            self.timestep = 0
+                        else:
+                                self.timestep = 1/2000
                     elif event.key == pygame.K_LEFT:
-                        self.timestep = -1/2000
+                        if self.timestep > 0:
+                            self.timestep = 0
+                        else:
+                            self.timestep = -1/2000
                     elif event.key == pygame.K_RSHIFT:
-                        self.timestep = -1/700
+                        self.timestep = -1/500
                         print('speed)')
                     elif event.key == pygame.K_LSHIFT:
-                        self.timestep = 1/700
+                        self.timestep = 1/500
                         print('speed)')
-                else:
-                    self.timestep = 0
+                
 
 
 game = Game()
