@@ -27,7 +27,7 @@ class Game():
         self.y = 300
         self.pos1 = np.array([300,self.y])
         self.pos2 = np.array([400,self.y])
-        self.UI()
+        self.Str_Mass = str(self.m2)
        
     def cal_pos(self,timestep):
         self.delta_pos1 = np.array([self.v1*timestep,0])
@@ -72,12 +72,6 @@ class Game():
         self.y = 300
         self.pos1 = np.array([300,self.y])
         self.pos2 = np.array([400,self.y])         
-
-    def UI(self):
-        #ui for mass count
-        self.Str_Mass = str(self.m2)
-        
-        
 
     def UI_Render(self):
         #text for mass
