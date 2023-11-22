@@ -53,7 +53,7 @@ class Game():
         self.v1 = self.v2 + v2 - v1
 
     def cycle_sim(self):
-        if self.pos2[0] > 880:
+        if self.pos2[0] > 900:
             self.restart() 
     def update(self):
         if self.pos1[0]+50 >= self.pos2[0]:
@@ -120,6 +120,8 @@ class Game():
             
     def render(self):
         self.window.blit(self.background, (0, 0))
+        if self.slide ==1:
+            self.window.blit('1.png', (0, 0))
         #objects
         pygame.draw.rect(self.window,(39, 40, 34),pygame.Rect(self.pos1[0],self.y,self.size1,self.size1))
         pygame.draw.rect(self.window,(93, 102, 179),pygame.Rect(self.pos2[0],625-self.size2,self.size2,self.size2))
@@ -136,7 +138,7 @@ class Game():
             for i in range(10):
                 self.update()
             self.cycle_sim()
-            self.render()        
+            #self.render()        
             self.clock.tick(self.fps)
             if self.n_collisions != self.collision:
                 self.sound.play()
