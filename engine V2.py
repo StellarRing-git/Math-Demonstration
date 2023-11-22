@@ -120,11 +120,9 @@ class Game():
             
     def render(self):
         self.window.blit(self.background, (0, 0))
-        if self.slide ==1:
-            self.window.blit('1.png', (0, 0))
         #objects
-        pygame.draw.rect(self.window,(39, 40, 34),pygame.Rect(self.pos1[0],self.y,self.size1,self.size1))
-        pygame.draw.rect(self.window,(93, 102, 179),pygame.Rect(self.pos2[0],625-self.size2,self.size2,self.size2))
+        pygame.draw.rect(self.window,(255, 145, 77),pygame.Rect(self.pos1[0],self.y,self.size1,self.size1),0,10)
+        pygame.draw.rect(self.window,(255, 145, 77),pygame.Rect(self.pos2[0],625-self.size2,self.size2,self.size2),0,10)
         pygame.draw.rect(self.window,(200, 200, 200),pygame.Rect(105,110,7,522),0,10)
         pygame.draw.rect(self.window,(200, 200, 200),pygame.Rect(105,625,1154,7),0,10)
         #UI
@@ -138,7 +136,7 @@ class Game():
             for i in range(10):
                 self.update()
             self.cycle_sim()
-            #self.render()        
+            self.render()        
             self.clock.tick(self.fps)
             if self.n_collisions != self.collision:
                 self.sound.play()
